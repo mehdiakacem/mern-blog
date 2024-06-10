@@ -30,6 +30,12 @@ header a {
 	color: inherit;
 }
 
+header a:hover {
+	text-decoration: none;
+	color: inherit;
+	cursor: pointer;
+}
+
 header a.logo {
 	font-weight: bold;
 	font-size: 1.5rem;
