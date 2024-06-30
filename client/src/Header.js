@@ -6,13 +6,22 @@ export default function Header() {
   const { setUserInfo, userInfo } = useContext(UserContext);
 
   useEffect(() => {
-    fetch("http://localhost:4000/profile", {
-      credentials: "include",
-    }).then((response) => {
-      response.json().then((userInfo) => {
+    const fetchUserInfo = async () => {
+      try {
+        const response = await fetch("http://localhost:4000/profile", {
+          credentials: "include",
+        });
+        if (!response.ok) {
+          return;
+        }
+        const userInfo = await response.json();
         setUserInfo(userInfo);
-      });
-    });
+      } catch (error) {
+        console.error("Fetch user info failed:", error);
+      }
+    };
+
+    fetchUserInfo();
   }, []);
 
   function logout() {
@@ -23,7 +32,7 @@ export default function Header() {
     setUserInfo(null);
   }
 
-  const username = userInfo?.username
+  const username = userInfo?.username;
 
   return (
     <header>

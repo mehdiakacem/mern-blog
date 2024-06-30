@@ -39,6 +39,10 @@ app.post("/register", async (req, res) => {
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
   const userDoc = await User.findOne({ username });
+  if (!userDoc) {
+    return res.status(400).json("wrong credentials");
+	
+  }
   const passOk = bcrypt.compareSync(password, userDoc.password);
   if (passOk) {
     // logged in
@@ -98,7 +102,7 @@ app.put("/post", uploadMiddleware.single("file"), async (req, res) => {
     const parts = originalname.split(".");
     const ext = parts[parts.length - 1];
     newPath = path + "." + ext;
-	
+
     fs.renameSync(path, newPath);
   }
 
