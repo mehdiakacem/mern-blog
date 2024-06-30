@@ -14,7 +14,7 @@ export default function Post({
     <div className="post">
       <div className="image">
         <Link to={`/post/${_id}`}>
-          <img src={"http://localhost:4000/" + cover} alt="" />
+          <img src={`${process.env.REACT_APP_API_URL}/` + cover} alt="" />
         </Link>
       </div>
       <div className="texts">
@@ -22,7 +22,7 @@ export default function Post({
           <h2>{title}</h2>
         </Link>
         <p className="info">
-          <a className="author">{author.username}</a>
+          <div className="author">{author.username}</div>
           <time>{formatISO9075(createdAt)}</time>
         </p>
         <p className="summary">{summary}</p>

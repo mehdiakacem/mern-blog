@@ -10,12 +10,13 @@ export default function PostPage() {
   const { id } = useParams();
 
   useEffect(() => {
-    fetch(`http://localhost:4000/post/${id}`).then((response) => {
+	const url = `${process.env.REACT_APP_API_URL}/post/${id}`
+    fetch(url).then((response) => {
       response.json().then((postInfo) => {
         setPostInfo(postInfo);
       });
     });
-  }, []);
+  }, [id]);
 
   if (!postInfo) return "";
   return (
@@ -45,7 +46,7 @@ export default function PostPage() {
         </div>
       )}
       <div className="image">
-        <img src={`http://localhost:4000/${postInfo.cover}`} alt="" />
+        <img src={`${process.env.REACT_APP_API_URL}/${postInfo.cover}`} alt="" />
       </div>
       <div
         className="content"

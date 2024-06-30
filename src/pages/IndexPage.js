@@ -6,7 +6,8 @@ export default function IndexPage() {
 
 
   useEffect(() => {
-    fetch("http://localhost:4000/post").then((response) => {
+	const url = `${process.env.REACT_APP_API_URL}/post`
+    fetch(url).then((response) => {
       response.json().then((posts) => {
         setPosts(posts);
       });

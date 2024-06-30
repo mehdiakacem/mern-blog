@@ -10,6 +10,8 @@ const app = express();
 const multer = require("multer");
 const uploadMiddleware = multer({ dest: "uploads/" });
 const fs = require("fs");
+const dotenv = require("dotenv");
+dotenv.config();
 
 const salt = bcrypt.genSaltSync(10);
 const secret = "asdfasdfasdfassdf988098a7sdf";
@@ -41,7 +43,6 @@ app.post("/login", async (req, res) => {
   const userDoc = await User.findOne({ username });
   if (!userDoc) {
     return res.status(400).json("wrong credentials");
-	
   }
   const passOk = bcrypt.compareSync(password, userDoc.password);
   if (passOk) {
@@ -143,7 +144,12 @@ app.get("/post/:id", async (req, res) => {
   res.json(postDoc);
 });
 
-app.listen(4000);
+if (process.env.API_PORT) {
+	app.listen(process.env.API_PORT);
+}
+
+
+module.exports = app;
 
 //mongodb+srv://blog:<oxAAbLrhmDkjaoW7>@cluster0.lq1scvh.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
 //oxAAbLrhmDkjaoW7

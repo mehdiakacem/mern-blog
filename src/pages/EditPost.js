@@ -1,25 +1,39 @@
-import { useState } from "react";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
-import { Navigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import Editor from "../Editor";
+import { Navigate, useParams } from "react-router-dom";
 
-export default function CreatePost() {
+export default function EditPost() {
+  const { id } = useParams();
   const [title, setTitle] = useState("");
   const [summary, setSummary] = useState("");
   const [content, setContent] = useState("");
   const [files, setFiles] = useState("");
   const [redirect, setRedirect] = useState(false);
 
-  async function createNewPost(ev) {
+  const url = `${process.env.REACT_APP_API_URL}/post/`
+  useEffect(() => {
+    fetch(url + id).then((response) => {
+      response.json().then((postInfo) => {
+        setTitle(postInfo.title);
+        setContent(postInfo.content);
+        setSummary(postInfo.summary);
+      });
+    });
+  }, [id, url]);
+  async function updatePost(ev) {
+    ev.preventDefault();
     const data = new FormData();
     data.set("title", title);
     data.set("summary", summary);
     data.set("content", content);
-    data.set("file", files[0]);
-    ev.preventDefault();
-    const response = await fetch("http://localhost:4000/post", {
-      method: "POST",
+    data.set("id", id);
+
+    if (files?.[0]) {
+      data.set("file", files?.[0]);
+    }
+
+    const response = await fetch(url, {
+      method: "PUT",
       body: data,
       credentials: "include",
     });
@@ -29,11 +43,11 @@ export default function CreatePost() {
   }
 
   if (redirect) {
-    return <Navigate to={"/"} />;
+    return <Navigate to={"/post/" + id} />;
   }
 
   return (
-    <form onSubmit={createNewPost}>
+    <form onSubmit={updatePost}>
       <input
         type="title"
         placeholder="Title"
@@ -47,8 +61,8 @@ export default function CreatePost() {
         onChange={(ev) => setSummary(ev.target.value)}
       />
       <input type="file" onChange={(ev) => setFiles(ev.target.files)} />
-      <Editor value={content} onChange={setContent}/>
-      <button style={{ marginTop: "5px" }}>Create post</button>
+      <Editor onChange={setContent} value={content} />
+      <button style={{ marginTop: "5px" }}>Update post</button>
     </form>
   );
 }

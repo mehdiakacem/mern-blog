@@ -6,8 +6,8 @@ export default function RegisterPage() {
 
   async function register(ev) {
     ev.preventDefault();
-
-    const response = await fetch("http://localhost:4000/register", {
+	const url = `${process.env.REACT_APP_API_URL}/register`
+    const response = await fetch(url , {
       method: "POST",
       body: JSON.stringify({ username, password }),
       headers: { "Content-Type": "application/json" },

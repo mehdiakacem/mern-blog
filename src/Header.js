@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { UserContext } from "./UserContext";
 
@@ -6,9 +6,10 @@ export default function Header() {
   const { setUserInfo, userInfo } = useContext(UserContext);
 
   useEffect(() => {
-    const fetchUserInfo = async () => {
+    const fetchUserInfo = async () => { 
       try {
-        const response = await fetch("http://localhost:4000/profile", {
+		const url = `${process.env.REACT_APP_API_URL}/profile`
+        const response = await fetch(url, {
           credentials: "include",
         });
         if (!response.ok) {
@@ -22,10 +23,11 @@ export default function Header() {
     };
 
     fetchUserInfo();
-  }, []);
+  }, [setUserInfo]);
 
   function logout() {
-    fetch("http://localhost:4000/logout", {
+	const url = `${process.env.REACT_APP_API_URL}/logout`
+    fetch(url, {
       credentials: "include",
       method: "POST",
     });
@@ -43,7 +45,7 @@ export default function Header() {
         {username && (
           <>
             <Link to="/create">Create new post</Link>
-            <a onClick={logout}>Logout</a>
+            <a href="" onClick={logout}>Logout</a>
           </>
         )}
         {!username && (
